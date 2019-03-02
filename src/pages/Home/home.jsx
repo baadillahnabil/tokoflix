@@ -153,13 +153,32 @@ class Home extends Component {
   onBuy = async movie => {
     // TODO:
     // 1. Check minimum balance to prevent insufficient balance
+    if (this.contextApiState.balance <= 0) {
+      this.contextApiActions.updateSnackbar({
+        open: true,
+        message: 'Insufficient Balance',
+        duration: 1500
+      })
+    }
+
+    // 2. Check if owned
     if (!movie.owned) {
-      // 1. Update ContextAPI Balance
+      // 1. Check if balance is enough to deduct current price
       const currentBalance = this.contextApiState.balance
+      if (currentBalance - movie.price <= 0) {
+        this.contextApiActions.updateSnackbar({
+          open: true,
+          message: 'Insufficient Balance',
+          duration: 1500
+        })
+        return
+      }
+
+      // 2. Update ContextAPI Balance
       await this.contextApiActions.updateBalance(currentBalance - movie.price)
       this.contextApiState = this.props.state
 
-      // 2. Change button style
+      // 3. Change button style
       const moviesClone = [...this.state.movies]
       const updateIndex = moviesClone.findIndex(
         movieObj => movieObj.id === movie.id
