@@ -68,6 +68,7 @@ class Home extends Component {
       for (const result of response.data.results) {
         const movie = {
           ...result,
+          owned: false,
         }
 
         // Generate movie genre based on it's IDs
@@ -152,10 +153,22 @@ class Home extends Component {
   onBuy = async movie => {
     // TODO:
     // 1. Check minimum balance to prevent insufficient balance
-    // 2. Change button to "Owned" so that user can't buy multiple times
-    const currentBalance = this.contextApiState.balance
-    await this.contextApiActions.updateBalance(currentBalance - movie.price)
-    this.contextApiState = this.props.state
+    if (!movie.owned) {
+      // 1. Update ContextAPI Balance
+      const currentBalance = this.contextApiState.balance
+      await this.contextApiActions.updateBalance(currentBalance - movie.price)
+      this.contextApiState = this.props.state
+
+      // 2. Change button style
+      const moviesClone = [...this.state.movies]
+      const updateIndex = moviesClone.findIndex(
+        movieObj => movieObj.id === movie.id
+      )
+      moviesClone[updateIndex].owned = true
+      await this.setState({
+        movies: moviesClone,
+      })
+    }
   }
 
   render() {
@@ -193,11 +206,12 @@ class Home extends Component {
                 </p>
                 <Button
                   color="primary"
+                  disabled={movie.owned}
                   variant="outlined"
                   className={Classes.buttonBuy}
                   onClick={() => this.onBuy(movie)}
                 >
-                  Buy
+                  {movie.owned ? 'Owned' : 'Buy'}
                 </Button>
               </CardActions>
             </Card>
