@@ -1,0 +1,23 @@
+.rootApp {
+  flex-grow: 1;
+
+  .navbar {
+    .navbarTitle {
+      flex-grow: 1;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .balance {
+      font-weight: bold;
+      .balanceAmount {
+        font-size: 20px;
+        color: teal;
+      }
+    }
+  }
+
+  .rootPages {
+    margin-top: 64px;
+  }
+}
