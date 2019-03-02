@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button'
 import takeRight from 'lodash/takeRight'
 import isEmpty from 'lodash/isEmpty'
 import map from 'lodash/map'
+import kebabCase from 'lodash/kebabCase'
 import format from 'date-fns/format'
 import accounting from 'accounting'
 
@@ -25,12 +26,14 @@ class Detail extends Component {
     showLoading: false,
     movie: {},
     recommendations: [],
+    similar: [],
   }
 
   async componentWillMount() {
     await this.setInitialState()
-    await this.getMovieRecommendation()
     await this.getMovieDetail()
+    await this.getMovieRecommendation()
+    await this.getMovieSimilar()
   }
 
   setInitialState = async () => {
@@ -88,6 +91,7 @@ class Detail extends Component {
     try {
       await this.setState({
         recommendations: [],
+        showLoading: true,
       })
 
       const response = await API.get(`/movie/${this.state.id}/recommendations`)
@@ -96,14 +100,48 @@ class Detail extends Component {
       })
     } catch (error) {
       console.log(error)
+    } finally {
+      await this.setState({
+        showLoading: false,
+      })
     }
   }
 
+  getMovieSimilar = async () => {
+    try {
+      await this.setState({
+        similar: [],
+        showLoading: true,
+      })
+
+      const response = await API.get(`/movie/${this.state.id}/similar`)
+      await this.setState({
+        similar: response.data.results,
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      await this.setState({
+        showLoading: false,
+      })
+    }
+  }
+
+  showMovieDetail = async movie => {
+    // await this.props.actions.updateIsSelectedMovieOwned(true)
+    await this.props.history.push(`/${movie.id}-${kebabCase(movie.title)}`)
+    await this.setInitialState()
+    await this.getMovieDetail()
+    await this.getMovieRecommendation()
+    await this.getMovieSimilar()
+  }
+
   render() {
-    const { movie, recommendations } = this.state
+    const { movie, recommendations, similar } = this.state
 
     let detailView = <></>
     let recommendationView = []
+    let similarView = []
     if (!isEmpty(movie)) {
       // Recommendations View
       if (isEmpty(recommendations)) {
@@ -117,7 +155,9 @@ class Detail extends Component {
           recommendationView.push(
             <Grid item xs={3} key={recommendation.id}>
               <Card className={Classes.card}>
-                <CardActionArea>
+                <CardActionArea
+                  onClick={() => this.showMovieDetail(recommendation)}
+                >
                   <CardMedia
                     className={Classes.media}
                     image={BASE_URL_IMAGE + recommendation.poster_path}
@@ -128,6 +168,35 @@ class Detail extends Component {
                     <p className={Classes.movieOverview}>
                       {recommendation.overview}
                     </p>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          )
+        }
+      }
+
+      // Similar View
+      if (isEmpty(similar)) {
+        similarView = (
+          <p className={Classes.noSimilar}>
+            Sorry, no similar items for this movie
+          </p>
+        )
+      } else {
+        for (const sim of similar) {
+          similarView.push(
+            <Grid item xs={3} key={sim.id}>
+              <Card className={Classes.card}>
+                <CardActionArea onClick={() => this.showMovieDetail(sim)}>
+                  <CardMedia
+                    className={Classes.media}
+                    image={BASE_URL_IMAGE + sim.poster_path}
+                    title={sim.title}
+                  />
+                  <CardContent className={Classes.cardContent}>
+                    <p className={Classes.movieTitle}>{sim.title}</p>
+                    <p className={Classes.movieOverview}>{sim.overview}</p>
                   </CardContent>
                 </CardActionArea>
               </Card>
@@ -207,6 +276,14 @@ class Detail extends Component {
               className={Classes.recommendationContainer}
             >
               {recommendationView}
+            </Grid>
+          </div>
+
+          {/* Movie Similar */}
+          <div className={Classes.movieSimilar}>
+            <p className={Classes.similarTitle}>Similar</p>
+            <Grid container spacing={24} className={Classes.similarContainer}>
+              {similarView}
             </Grid>
           </div>
         </>
