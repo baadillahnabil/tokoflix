@@ -1,5 +1,5 @@
 .home {
-  margin: 0 10%;
+  margin: 0 5%;
   padding: 20px 0;
 
   .title {
@@ -27,6 +27,14 @@
         font-weight: bold;
         margin-top: 0;
         margin-bottom: 16px;
+      }
+
+      .movieMeta {
+        .rating {
+          font-weight: bold;
+          color: teal;
+          font-size: 14px;
+        }
       }
 
       .movieOverview {
