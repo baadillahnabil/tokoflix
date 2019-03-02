@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import accounting from 'accounting'
 
 import Classes from './app.module.scss'
 
@@ -35,7 +36,7 @@ class App extends Component {
               <p className={Classes.balance}>
                 Rp{' '}
                 <span className={Classes.balanceAmount}>
-                  {this.state.balance}
+                  {accounting.formatMoney(this.state.balance, '', 0, '.')}
                 </span>
               </p>
             </Toolbar>
