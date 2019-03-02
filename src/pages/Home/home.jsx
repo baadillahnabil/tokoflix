@@ -39,6 +39,10 @@ export default class Home extends Component {
         await this.setState({
           currentPage: pageFromUrl,
         })
+      } else {
+        await this.setState({
+          currentPage: 1,
+        })
       }
 
       const response = await API.get('/discover/movie', {
