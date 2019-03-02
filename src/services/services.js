@@ -5,6 +5,7 @@ const API = axios.create({
   baseURL: BASE_URL,
   params: {
     api_key: API_KEY,
+    language: 'en-US',
   },
 })
 
