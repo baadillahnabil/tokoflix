@@ -1,0 +1,12 @@
+{
+  "presets": ["react-app"],
+  "env": {
+    "development": {
+      "plugins": [["styled-components", { "ssr": false, "displayName": true, "preprocess": false }]]
+    },
+    "production": {
+      "plugins": [["styled-components", { "ssr": false, "displayName": true, "preprocess": false }]]
+    }
+  },
+  "plugins": [["styled-components", { "ssr": false, "displayName": true, "preprocess": false }]]
+}
