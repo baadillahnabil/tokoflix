@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import qs from 'query-string'
+import accounting from 'accounting'
 
 import Classes from './home.module.scss'
 
@@ -76,6 +77,20 @@ class Home extends Component {
           genres.push(match.name)
         }
         movie.genres = genres.join(', ')
+
+        // Calculate the price
+        let price = 0
+        const rating = result.vote_average
+        if (rating <= 3) {
+          price = 3500
+        } else if (rating <= 6) {
+          price = 8250
+        } else if (rating <= 8) {
+          price = 16350
+        } else if (rating <= 10) {
+          price = 21250
+        }
+        movie.price = price
 
         movies.push(movie)
       }
@@ -164,7 +179,9 @@ class Home extends Component {
                 </CardContent>
               </CardActionArea>
               <CardActions className={Classes.cardActions}>
-                <p className={Classes.price}>Rp 123.123</p>
+                <p className={Classes.price}>
+                  {accounting.formatMoney(movie.price, 'Rp ', 0, '.')}
+                </p>
                 <Button
                   color="primary"
                   variant="outlined"
