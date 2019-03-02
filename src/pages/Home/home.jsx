@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import qs from 'query-string'
 import accounting from 'accounting'
+import kebabCase from 'lodash/kebabCase'
 
 import Classes from './home.module.scss'
 
@@ -151,13 +152,12 @@ class Home extends Component {
   }
 
   onBuy = async movie => {
-    // TODO:
     // 1. Check minimum balance to prevent insufficient balance
     if (this.contextApiState.balance <= 0) {
       this.contextApiActions.updateSnackbar({
         open: true,
         message: 'Insufficient Balance',
-        duration: 1500
+        duration: 1500,
       })
     }
 
@@ -169,7 +169,7 @@ class Home extends Component {
         this.contextApiActions.updateSnackbar({
           open: true,
           message: 'Insufficient Balance',
-          duration: 1500
+          duration: 1500,
         })
         return
       }
@@ -190,6 +190,12 @@ class Home extends Component {
     }
   }
 
+  goToDetailPage = async movie => {
+    await this.contextApiActions.updateIsSelectedMovieOwned(movie.owned)
+    this.contextApiState = this.props.state
+    this.props.history.push(`/${movie.id}-${kebabCase(movie.title)}`)
+  }
+
   render() {
     // Render cards with data from API
     let moviesCards = []
@@ -198,7 +204,7 @@ class Home extends Component {
         moviesCards.push(
           <Grid item xs={3} key={movie.id}>
             <Card className={Classes.card}>
-              <CardActionArea>
+              <CardActionArea onClick={() => this.goToDetailPage(movie)}>
                 <CardMedia
                   className={Classes.media}
                   image={BASE_URL_IMAGE + movie.poster_path}
