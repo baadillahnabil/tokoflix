@@ -149,9 +149,12 @@ class Home extends Component {
     await this.getMovies()
   }
 
-  onBuy = movie => {
+  onBuy = async movie => {
+    // TODO:
+    // 1. Check minimum balance to prevent insufficient balance
+    // 2. Change button to "Owned" so that user can't buy multiple times
     const currentBalance = this.contextApiState.balance
-    this.contextApiActions.updateBalance(currentBalance - movie.price)
+    await this.contextApiActions.updateBalance(currentBalance - movie.price)
     this.contextApiState = this.props.state
   }
 
