@@ -19,6 +19,7 @@ import { contextWrapper } from '../../contextApi/context'
 class Home extends Component {
   state = {
     movies: [],
+    genres: [],
     showLoading: true,
     currentPage: 1,
     totalPages: 1,
@@ -29,6 +30,7 @@ class Home extends Component {
   contextApiActions = this.props.actions
 
   async componentDidMount() {
+    await this.getGenres()
     await this.getMovies()
   }
 
@@ -61,9 +63,51 @@ class Home extends Component {
         },
       })
 
+      const movies = []
+      for (const result of response.data.results) {
+        const movie = {
+          ...result,
+        }
+
+        // Generate movie genre based on it's IDs
+        const genres = []
+        for (const genre_id of result.genre_ids) {
+          const match = this.state.genres.find(genre => genre.id === genre_id)
+          genres.push(match.name)
+        }
+        movie.genres = genres.join(', ')
+
+        movies.push(movie)
+      }
+
       await this.setState({
-        movies: response.data.results,
+        movies,
         totalPages: response.data.total_pages,
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      await this.setState({
+        showLoading: false,
+      })
+    }
+  }
+
+  getGenres = async () => {
+    try {
+      await this.setState({
+        genres: [],
+        showLoading: true,
+      })
+
+      const response = await API.get('/genre/movie/list', {
+        params: {
+          language: 'en-US',
+        },
+      })
+
+      await this.setState({
+        genres: response.data.genres,
       })
     } catch (error) {
       console.log(error)
@@ -105,6 +149,16 @@ class Home extends Component {
                   title={movie.title}
                 />
                 <CardContent className={Classes.cardContent}>
+                  <div className={Classes.movieMeta}>
+                    <span>
+                      <span className={Classes.rating}>
+                        {movie.vote_average}
+                      </span>{' '}
+                      / 10
+                    </span>{' '}
+                    {' - '}
+                    <span>{movie.genres}</span>
+                  </div>
                   <p className={Classes.movieTitle}>{movie.title}</p>
                   <p className={Classes.movieOverview}>{movie.overview}</p>
                 </CardContent>
@@ -137,7 +191,7 @@ class Home extends Component {
             Prev
           </Button>
           <p className={Classes.currentPageText}>
-            Current Page is:
+            Page
             <span className={Classes.pageNumber}>{this.state.currentPage}</span>
           </p>
           <Button
