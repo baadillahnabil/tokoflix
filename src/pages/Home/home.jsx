@@ -54,7 +54,7 @@ class Home extends Component {
         })
       }
 
-      const response = await API.get('/discover/movie', {
+      const response = await API.get('/movie/now_playing', {
         params: {
           page: this.state.currentPage,
           sort_by: 'release_date.desc',
