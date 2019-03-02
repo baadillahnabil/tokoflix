@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import Snackbar from '@material-ui/core/Snackbar'
 import accounting from 'accounting'
 
 import Classes from './app.module.scss'
@@ -14,6 +15,11 @@ import { Provider } from '../contextApi/context'
 class App extends Component {
   state = {
     balance: 100000,
+    snackbar: {
+      open: false,
+      message: '',
+      duration: 1500,
+    },
   }
 
   render() {
@@ -26,10 +32,33 @@ class App extends Component {
               this.setState({
                 balance: newBalance,
               }),
+            updateSnackbar: ({ open, message, duration }) => {
+              this.setState({
+                snackbar: { open, message, duration },
+              })
+            },
           },
         }}
       >
         <div className={Classes.rootApp}>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            open={this.state.snackbar.open}
+            autoHideDuration={this.state.snackbar.duration}
+            onClose={() =>
+              this.setState({
+                snackbar: {
+                  open: false,
+                  message: '',
+                  duration: 1500,
+                },
+              })
+            }
+            message={this.state.snackbar.message}
+          />
           <AppBar className={Classes.navbar} position="fixed" color="default">
             <Toolbar>
               <p className={Classes.navbarTitle}>Tokoflix</p>
