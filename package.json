@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.2",
     "accounting": "^0.4.1",
     "axios": "^0.18.0",
+    "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
     "query-string": "^6.2.0",
     "react": "^16.8.3",
