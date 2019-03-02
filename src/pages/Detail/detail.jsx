@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
+import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Button from '@material-ui/core/Button'
@@ -22,10 +24,12 @@ class Detail extends Component {
     slug: null,
     showLoading: false,
     movie: {},
+    recommendations: [],
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     await this.setInitialState()
+    await this.getMovieRecommendation()
     await this.getMovieDetail()
   }
 
@@ -48,6 +52,7 @@ class Detail extends Component {
 
       const response = await API.get(`/movie/${this.state.id}`)
 
+      // Generate text data from array data
       response.data.genreText = map(response.data.genres, 'name').join(', ')
       response.data.language = map(response.data.spoken_languages, 'name').join(
         ', '
@@ -66,6 +71,7 @@ class Detail extends Component {
         price = 21250
       }
       response.data.price = price
+
       await this.setState({
         movie: response.data,
       })
@@ -78,23 +84,76 @@ class Detail extends Component {
     }
   }
 
-  render() {
-    const { movie } = this.state
+  getMovieRecommendation = async () => {
+    try {
+      await this.setState({
+        recommendations: [],
+      })
 
-    let detail = <></>
+      const response = await API.get(`/movie/${this.state.id}/recommendations`)
+      await this.setState({
+        recommendations: response.data.results,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  render() {
+    const { movie, recommendations } = this.state
+
+    let detailView = <></>
+    let recommendationView = []
     if (!isEmpty(movie)) {
-      detail = (
+      // Recommendations View
+      if (isEmpty(recommendations)) {
+        recommendationView = (
+          <p className={Classes.noRecommendation}>
+            Sorry, no recommendation for this movie
+          </p>
+        )
+      } else {
+        for (const recommendation of recommendations) {
+          recommendationView.push(
+            <Grid item xs={3} key={recommendation.id}>
+              <Card className={Classes.card}>
+                <CardActionArea>
+                  <CardMedia
+                    className={Classes.media}
+                    image={BASE_URL_IMAGE + recommendation.poster_path}
+                    title={recommendation.title}
+                  />
+                  <CardContent className={Classes.cardContent}>
+                    <p className={Classes.movieTitle}>{recommendation.title}</p>
+                    <p className={Classes.movieOverview}>
+                      {recommendation.overview}
+                    </p>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          )
+        }
+      }
+
+      // Details View
+      detailView = (
         <>
+          {/* Loading State */}
           {this.state.showLoading && (
             <div className={Classes.loading}>
               <CircularProgress color="primary" />
             </div>
           )}
+
+          {/* Backdrop Image */}
           <img
             src={BASE_URL_IMAGE + movie.backdrop_path}
             alt="backdrop"
             className={Classes.backdropImage}
           />
+
+          {/* Movie Details */}
           <div className={Classes.mainArea}>
             <Card className={Classes.card}>
               <CardMedia
@@ -138,11 +197,23 @@ class Detail extends Component {
               </div>
             </Card>
           </div>
+
+          {/* Movie Recommendations */}
+          <div className={Classes.movieRecommendation}>
+            <p className={Classes.recommendationTitle}>Recommendations</p>
+            <Grid
+              container
+              spacing={24}
+              className={Classes.recommendationContainer}
+            >
+              {recommendationView}
+            </Grid>
+          </div>
         </>
       )
     }
 
-    return <div className={Classes.detail}>{detail}</div>
+    return <div className={Classes.detail}>{detailView}</div>
   }
 }
 
