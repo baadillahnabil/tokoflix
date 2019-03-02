@@ -1,0 +1,90 @@
+.detail {
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  .backdropImage {
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    position: fixed;
+    filter: brightness(25%) opacity(60%);
+    -webkit-filter: brightness(25%) opacity(60%);
+    -moz-filter: brightness(25%) opacity(60%);
+  }
+
+  .mainArea {
+    padding: 5%;
+
+    .card {
+      display: flex;
+
+      .media {
+        min-width: 500px;
+        min-height: 500px;
+      }
+
+      .cardDetail {
+        display: flex;
+        flex-direction: column;
+
+        .cardContent {
+          margin: 0 20px;
+
+          .movieTitle {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 0;
+          }
+
+          .movieTagline {
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 5px;
+          }
+
+          .movieRating {
+            margin: 5px 0;
+            margin-top: 30px;
+
+            .ratingValue {
+              font-weight: bold;
+              color: teal;
+              font-size: 20px;
+            }
+          }
+
+          .movieGenre,
+          .movieLanguage,
+          .movieRelease {
+            margin: 5px 0;
+          }
+
+          .movieOverview {
+            overflow: auto;
+            height: 120px;
+            text-align: justify;
+            margin-top: 30px;
+          }
+        }
+
+        .cardActions {
+          margin: 0 20px;
+          padding: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .price {
+            font-weight: bold;
+            font-size: 24px;
+            color: deeppink;
+          }
+        }
+      }
+    }
+  }
+}
