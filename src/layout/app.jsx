@@ -20,6 +20,25 @@ class App extends Component {
       message: '',
       duration: 1500,
     },
+    isSelectedMovieOwned: false,
+  }
+
+  updateBalance = newBalance => {
+    this.setState({
+      balance: newBalance,
+    })
+  }
+
+  updateSnackbar = ({ open, message, duration }) => {
+    this.setState({
+      snackbar: { open, message, duration },
+    })
+  }
+
+  updateIsSelectedMovieOwned = owned => {
+    this.setState({
+      isSelectedMovieOwned: owned,
+    })
   }
 
   render() {
@@ -28,19 +47,14 @@ class App extends Component {
         value={{
           state: this.state,
           actions: {
-            updateBalance: newBalance =>
-              this.setState({
-                balance: newBalance,
-              }),
-            updateSnackbar: ({ open, message, duration }) => {
-              this.setState({
-                snackbar: { open, message, duration },
-              })
-            },
+            updateBalance: this.updateBalance,
+            updateSnackbar: this.updateSnackbar,
+            updateIsSelectedMovieOwned: this.updateIsSelectedMovieOwned,
           },
         }}
       >
         <div className={Classes.rootApp}>
+          {/* Snackbar */}
           <Snackbar
             anchorOrigin={{
               vertical: 'top',
@@ -59,6 +73,8 @@ class App extends Component {
             }
             message={this.state.snackbar.message}
           />
+
+          {/* Navbar */}
           <AppBar className={Classes.navbar} position="fixed" color="default">
             <Toolbar>
               <p className={Classes.navbarTitle}>Tokoflix</p>
@@ -70,6 +86,8 @@ class App extends Component {
               </p>
             </Toolbar>
           </AppBar>
+
+          {/* Pages Routes */}
           <div className={Classes.rootPages}>
             <Switch>
               <Route path="/" exact component={Home} />
