@@ -163,7 +163,16 @@ class Home extends Component {
                   <p className={Classes.movieOverview}>{movie.overview}</p>
                 </CardContent>
               </CardActionArea>
-              <CardActions>{/* TODO: Show Price and Button Buy */}</CardActions>
+              <CardActions className={Classes.cardActions}>
+                <p className={Classes.price}>Rp 123.123</p>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  className={Classes.buttonBuy}
+                >
+                  Buy
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         )

@@ -43,6 +43,23 @@
         text-align: justify;
       }
     }
+
+    .cardActions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 10px;
+      padding-right: 10px;
+
+      .price {
+        font-weight: bold;
+        font-size: 18px;
+        color: deeppink;
+      }
+
+      .buttonBuy {
+      }
+    }
   }
 
   .media {
