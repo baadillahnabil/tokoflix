@@ -1,0 +1,59 @@
+.home {
+  margin: 20px 10%;
+
+  .title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin: 50px 0;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+  }
+
+  .card {
+    .cardContent {
+      height: 150px;
+
+      .movieTitle {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 16px;
+      }
+
+      .movieOverview {
+        overflow: auto;
+        height: 100px;
+        text-align: justify;
+      }
+    }
+  }
+
+  .media {
+    height: 250px;
+  }
+
+  .pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+
+    .currentPageText {
+      font-size: 12px;
+
+      .pageNumber {
+        color: teal;
+        font-weight: bold;
+        font-size: 14px;
+        margin-left: 10px;
+      }
+    }
+  }
+}
