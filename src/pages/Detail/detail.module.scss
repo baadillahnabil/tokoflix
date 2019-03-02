@@ -87,4 +87,48 @@
       }
     }
   }
+
+  .movieRecommendation {
+    background-color: white;
+    margin: 50px 5%;
+    padding: 15px 30px;
+    border-radius: 4px;
+
+    .noRecommendation {
+      font-style: italic;
+      margin-left: 12px;
+    }
+
+    .recommendationTitle {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .recommendationContainer {
+      padding-bottom: 20px;
+
+      .card {
+        .media {
+          height: 200px;
+        }
+
+        .cardContent {
+          height: 150px;
+
+          .movieTitle {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 16px;
+          }
+
+          .movieOverview {
+            overflow: auto;
+            max-height: 90px;
+            text-align: justify;
+          }
+        }
+      }
+    }
+  }
 }
