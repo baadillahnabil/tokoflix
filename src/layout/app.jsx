@@ -91,7 +91,7 @@ class App extends Component {
           <div className={Classes.rootPages}>
             <Switch>
               <Route path="/" exact component={Home} />
-              <Route path="/:movie_id/:slug" component={Detail} />
+              <Route path="/:id_and_slug" component={Detail} />
             </Switch>
           </div>
         </div>
