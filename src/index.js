@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import './index.scss'
-import App from './App'
+import App from './layout/app'
 import * as serviceWorker from './serviceWorker'
 
 // Wrap root component so that we can use router inside it
