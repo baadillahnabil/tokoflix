@@ -149,6 +149,12 @@ class Home extends Component {
     await this.getMovies()
   }
 
+  onBuy = movie => {
+    const currentBalance = this.contextApiState.balance
+    this.contextApiActions.updateBalance(currentBalance - movie.price)
+    this.contextApiState = this.props.state
+  }
+
   render() {
     // Render cards with data from API
     let moviesCards = []
@@ -186,6 +192,7 @@ class Home extends Component {
                   color="primary"
                   variant="outlined"
                   className={Classes.buttonBuy}
+                  onClick={() => this.onBuy(movie)}
                 >
                   Buy
                 </Button>
