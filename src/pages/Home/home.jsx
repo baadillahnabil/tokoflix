@@ -14,13 +14,19 @@ import Classes from './home.module.scss'
 import { BASE_URL_IMAGE } from '../../services/env'
 import API from '../../services/services'
 
-export default class Home extends Component {
+import { contextWrapper } from '../../contextApi/context'
+
+class Home extends Component {
   state = {
     movies: [],
     showLoading: true,
     currentPage: 1,
     totalPages: 1,
   }
+
+  // Context API
+  contextApiState = this.props.state
+  contextApiActions = this.props.actions
 
   async componentDidMount() {
     await this.getMovies()
@@ -85,7 +91,7 @@ export default class Home extends Component {
   }
 
   render() {
-    // TODO: Change this with real data
+    // Render cards with data from API
     let moviesCards = []
     if (this.state.movies !== []) {
       for (const movie of this.state.movies) {
@@ -103,9 +109,7 @@ export default class Home extends Component {
                   <p className={Classes.movieOverview}>{movie.overview}</p>
                 </CardContent>
               </CardActionArea>
-              <CardActions>
-                {/* TODO: Show Price, Ratings and Genre */}
-              </CardActions>
+              <CardActions>{/* TODO: Show Price and Button Buy */}</CardActions>
             </Card>
           </Grid>
         )
@@ -149,3 +153,5 @@ export default class Home extends Component {
     )
   }
 }
+
+export default contextWrapper(Home)
