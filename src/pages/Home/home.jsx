@@ -59,7 +59,6 @@ class Home extends Component {
         params: {
           page: this.state.currentPage,
           sort_by: 'release_date.desc',
-          language: 'en-US',
           region: 'ID',
           include_video: true,
         },
@@ -117,12 +116,7 @@ class Home extends Component {
         showLoading: true,
       })
 
-      const response = await API.get('/genre/movie/list', {
-        params: {
-          language: 'en-US',
-        },
-      })
-
+      const response = await API.get('/genre/movie/list')
       await this.setState({
         genres: response.data.genres,
       })
