@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button'
 import takeRight from 'lodash/takeRight'
 import isEmpty from 'lodash/isEmpty'
 import map from 'lodash/map'
+import find from 'lodash/find'
 import kebabCase from 'lodash/kebabCase'
 import format from 'date-fns/format'
 import accounting from 'accounting'
@@ -18,6 +19,8 @@ import Classes from './detail.module.scss'
 
 import { BASE_URL_IMAGE } from '../../services/env'
 import API from '../../services/services'
+
+import { contextWrapper } from '../../contextApi/context'
 
 class Detail extends Component {
   state = {
@@ -28,6 +31,10 @@ class Detail extends Component {
     recommendations: [],
     similar: [],
   }
+
+  // Context API
+  contextApiState = this.props.state
+  contextApiActions = this.props.actions
 
   async componentWillMount() {
     await this.setInitialState()
@@ -54,16 +61,15 @@ class Detail extends Component {
       })
 
       const response = await API.get(`/movie/${this.state.id}`)
+      const movie = response.data
 
       // Generate text data from array data
-      response.data.genreText = map(response.data.genres, 'name').join(', ')
-      response.data.language = map(response.data.spoken_languages, 'name').join(
-        ', '
-      )
+      movie.genreText = map(movie.genres, 'name').join(', ')
+      movie.language = map(movie.spoken_languages, 'name').join(', ')
 
       // Calculate the price
       let price = 0
-      const rating = response.data.vote_average
+      const rating = movie.vote_average
       if (rating <= 3) {
         price = 3500
       } else if (rating <= 6) {
@@ -73,10 +79,17 @@ class Detail extends Component {
       } else if (rating <= 10) {
         price = 21250
       }
-      response.data.price = price
+      movie.price = price
+
+      // Check whether already owned or not
+      movie.owned =
+        find(
+          this.contextApiState.moviesOwned,
+          movieId => movieId === movie.id
+        ) !== undefined
 
       await this.setState({
-        movie: response.data,
+        movie,
       })
     } catch (error) {
       console.log(error)
@@ -134,6 +147,50 @@ class Detail extends Component {
     await this.getMovieDetail()
     await this.getMovieRecommendation()
     await this.getMovieSimilar()
+  }
+
+  onBuy = async () => {
+    // 1. Check minimum balance to prevent insufficient balance
+    if (this.contextApiState.balance <= 0) {
+      this.contextApiActions.updateSnackbar({
+        open: true,
+        message: 'Insufficient Balance',
+        duration: 1500,
+      })
+    }
+
+    // 2. Check if owned
+    if (!this.state.movie.owned) {
+      // 1. Check if balance is enough to deduct current price
+      const currentBalance = this.contextApiState.balance
+      if (currentBalance - this.state.movie.price <= 0) {
+        this.contextApiActions.updateSnackbar({
+          open: true,
+          message: 'Insufficient Balance',
+          duration: 1500,
+        })
+        return
+      }
+
+      // 2. Update ContextAPI Balance
+      await this.contextApiActions.updateBalance(
+        currentBalance - this.state.movie.price
+      )
+      this.contextApiState = this.props.state
+
+      // 3. Add the id to list of movies owned
+      const moviesOwned = [...this.contextApiState.moviesOwned]
+      moviesOwned.push(this.state.movie.id)
+      await this.contextApiActions.updateMoviesOwned(moviesOwned)
+      this.contextApiState = this.props.state
+
+      // 4. Change button style
+      const movieClone = { ...this.state.movie }
+      movieClone.owned = true
+      await this.setState({
+        movie: movieClone,
+      })
+    }
   }
 
   render() {
@@ -259,8 +316,13 @@ class Detail extends Component {
                   <p className={Classes.price}>
                     {accounting.formatMoney(movie.price, 'Rp ', 0, '.')}
                   </p>
-                  <Button color="secondary" variant="outlined" size="large">
-                    Buy
+                  <Button
+                    color="secondary"
+                    disabled={movie.owned}
+                    variant="outlined"
+                    onClick={this.onBuy}
+                  >
+                    {movie.owned ? 'Owned' : 'Buy'}
                   </Button>
                 </CardActions>
               </div>
@@ -294,4 +356,4 @@ class Detail extends Component {
   }
 }
 
-export default Detail
+export default contextWrapper(Detail)
