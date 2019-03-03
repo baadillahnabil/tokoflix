@@ -20,7 +20,7 @@ class App extends Component {
       message: '',
       duration: 1500,
     },
-    isSelectedMovieOwned: false,
+    moviesOwned: [],
   }
 
   updateBalance = newBalance => {
@@ -35,9 +35,9 @@ class App extends Component {
     })
   }
 
-  updateIsSelectedMovieOwned = owned => {
+  updateMoviesOwned = movieIds => {
     this.setState({
-      isSelectedMovieOwned: owned,
+      moviesOwned: movieIds,
     })
   }
 
@@ -49,7 +49,7 @@ class App extends Component {
           actions: {
             updateBalance: this.updateBalance,
             updateSnackbar: this.updateSnackbar,
-            updateIsSelectedMovieOwned: this.updateIsSelectedMovieOwned,
+            updateMoviesOwned: this.updateMoviesOwned,
           },
         }}
       >
