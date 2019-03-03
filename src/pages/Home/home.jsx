@@ -10,6 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import qs from 'query-string'
 import accounting from 'accounting'
 import kebabCase from 'lodash/kebabCase'
+import find from 'lodash/find'
 
 import Classes from './home.module.scss'
 
@@ -93,6 +94,13 @@ class Home extends Component {
         }
         movie.price = price
 
+        // Check whether already owned or not
+        movie.owned =
+          find(
+            this.contextApiState.moviesOwned,
+            movieId => movieId === result.id
+          ) !== undefined
+
         movies.push(movie)
       }
 
@@ -172,7 +180,13 @@ class Home extends Component {
       await this.contextApiActions.updateBalance(currentBalance - movie.price)
       this.contextApiState = this.props.state
 
-      // 3. Change button style
+      // 3. Add the id to list of movies owned
+      const moviesOwned = [...this.contextApiState.moviesOwned]
+      moviesOwned.push(movie.id)
+      await this.contextApiActions.updateMoviesOwned(moviesOwned)
+      this.contextApiState = this.props.state
+
+      // 4. Change button style
       const moviesClone = [...this.state.movies]
       const updateIndex = moviesClone.findIndex(
         movieObj => movieObj.id === movie.id
