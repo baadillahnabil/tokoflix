@@ -1,3 +1,17 @@
+## Clone Step:
+
+- clone this project `git clone git@github.com:baadillahnabil/tokoflix.git`
+
+- move to the cloned directory `cd tokoflix`
+
+- run `yarn` or `npm run install`
+
+- run `yarn start` or `npm run start` to serve it in localhost
+
+- Done! Open the link! (usually `https://localhost:3000`)
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
