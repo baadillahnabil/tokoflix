@@ -199,8 +199,6 @@ class Home extends Component {
   }
 
   goToDetailPage = async movie => {
-    await this.contextApiActions.updateIsSelectedMovieOwned(movie.owned)
-    this.contextApiState = this.props.state
     this.props.history.push(`/${movie.id}-${kebabCase(movie.title)}`)
   }
 
@@ -241,7 +239,6 @@ class Home extends Component {
                   color="primary"
                   disabled={movie.owned}
                   variant="outlined"
-                  className={Classes.buttonBuy}
                   onClick={() => this.onBuy(movie)}
                 >
                   {movie.owned ? 'Owned' : 'Buy'}
