@@ -61,9 +61,16 @@ class Home extends Component {
           page: this.state.currentPage,
           sort_by: 'release_date.desc',
           region: 'ID',
-          include_video: true,
         },
       })
+
+      // NOTE: Because the data of 'Now Playing in Indonesia' is not much,
+      // I recommend if you want to test with the complete data,
+      // change the params above like this one:
+      //      params: {
+      //        page: this.state.currentPage,
+      //        sort_by: 'popularity.desc',
+      //      },
 
       const movies = []
       for (const result of response.data.results) {
