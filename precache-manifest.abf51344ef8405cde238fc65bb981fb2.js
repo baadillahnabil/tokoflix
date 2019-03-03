@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "c383f79fbb49dff036b9",
+    "revision": "3c34242d868a27c0dcbe",
     "url": "/tokoflix/static/css/main.ba65c1e8.chunk.css"
   },
   {
-    "revision": "c383f79fbb49dff036b9",
-    "url": "/tokoflix/static/js/main.c383f79f.chunk.js"
+    "revision": "3c34242d868a27c0dcbe",
+    "url": "/tokoflix/static/js/main.3c34242d.chunk.js"
   },
   {
     "revision": "0ae4abe108bd6b4a2288",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/tokoflix/static/js/2.562b4838.chunk.js"
   },
   {
-    "revision": "0576a8de0a5ef7917dcc1d601ffa6533",
+    "revision": "af4c53f6dc5d769c0746452d032f88fb",
     "url": "/tokoflix/index.html"
   }
 ];
