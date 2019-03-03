@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker'
 
 // Wrap root component so that we can use router inside it
 const app = (
-  <BrowserRouter>
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
     <App />
   </BrowserRouter>
 )
